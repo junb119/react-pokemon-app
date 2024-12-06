@@ -7,15 +7,21 @@ import PokeCard from "./components/PokeCard";
 
 function App() {
   const [pokemons, setPokemons] = useState([]);
-  const url = "https://pokeapi.co/api/v2/pokemon/?limit=10&offset=0";
+  const [offset, setOffset] = useState(0); // 가져올 데이터 offset(시작번호)
+  const [limit, setLimit] = useState(20); // 한번에 가져올 갯수 20개
+  const baseURL = "https://pokeapi.co/api/v2/pokemon";
+
   useEffect(() => {
-    fetchPokeData();
+    fetchPokeData(true);
   }, []);
-  const fetchPokeData = async () => {
+  
+  const fetchPokeData = async (isFirstFetch) => {
     try {
+      const offsetValue = isFirstFetch ? 0 : offset + limit; // 최초렌더링이면 offset은 0 아니면 기존 offset + 가져올갯수
+      const url = `${baseURL}/?limit=${limit}&offset=${offsetValue}`;
       const response = await axios.get(url);
-      console.log(response.data.results);
-      setPokemons(response.data.results);
+      setPokemons([...pokemons, ...response.data.results]);
+      setOffset(offsetValue); // 더보기로 포켓몬데이터 추가 후 offset 조정
     } catch (error) {
       console.error(error);
     }
@@ -38,6 +44,14 @@ function App() {
           )}
         </div>
       </section>
+      <div className="text-center">
+        <button
+          className="bg-slate-800 px-6 py-2 my-4 text-base rounded-lg font-bold text-white"
+          onClick={() => fetchPokeData(false)} // isFirstFetch를 false로 주어 추가렌더링
+        >
+          더 보기
+        </button>
+      </div>
     </article>
   );
 }
