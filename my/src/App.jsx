@@ -4,17 +4,22 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import axios from "axios";
 import PokeCard from "./components/PokeCard";
+import useDebounce from "./hooks/useDebounce";
 
 function App() {
   const [pokemons, setPokemons] = useState([]);
   const [offset, setOffset] = useState(0); // 가져올 데이터 offset(시작번호)
   const [limit, setLimit] = useState(20); // 한번에 가져올 갯수 20개
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const baseURL = "https://pokeapi.co/api/v2/pokemon";
 
   useEffect(() => {
     fetchPokeData(true);
   }, []);
+  useEffect(() => {
+    handleSearchInput(debouncedSearchTerm); // debouncedSearchTerm이 바뀔 때 handleSearchInput 호출로 검색한 포켓몬데이터가져오기
+  }, [debouncedSearchTerm]);
 
   const fetchPokeData = async (isFirstFetch) => {
     try {
@@ -28,12 +33,12 @@ function App() {
     }
   };
 
-  const handleSearchInput = async (e) => {
-    setSearchTerm(e.target.value); // 검색창에 입력이 있을 때 searchTerm을 입력값으로 변경
-    if (e.target.value.length > 0) {
+  const handleSearchInput = async (searchTerm) => {
+    // 새롭게 입력된 searchTerm 받아오기
+    if (searchTerm.length > 0) {
       try {
         // 입력값과 일치하는 데이터요청
-        const response = await axios.get(`${baseURL}/${e.target.value}`);
+        const response = await axios.get(`${baseURL}/${searchTerm}`);
         const pokemonData = {
           url: `${baseURL}/${response.data.id}`,
           name: searchTerm,
@@ -54,7 +59,7 @@ function App() {
         <div className="relative z-50">
           <form className="relative flex justify-center items-center w-[20.5rem] h-6 rounded-lg m-auto">
             <input
-              onChange={handleSearchInput}
+              onChange={(e) => setSearchTerm(e.target.value)}
               value={searchTerm}
               type="text"
               placeholder=" "
