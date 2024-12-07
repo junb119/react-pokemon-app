@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const LazyImage = ({ url, alt }) => {
   const [isLoading, setisLoading] = useState(true); // isLoading 상태에 따라 로딩이미지 보이기
