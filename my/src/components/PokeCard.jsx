@@ -55,6 +55,7 @@ const PokeCard = ({ url, name }) => {
             >
               <LazyImage url={img} alt={name} />
             </div>
+            ㅇ
           </div>
           <div
             className={`${bg} text-center text-xs text-zinc-100 h-[1.5rem] rounded-b-lg uppercase font-medium pt-1 `}
