@@ -1,5 +1,4 @@
 export const Type = ({ type, damageValue }) => {
-  console.log("d?");
   const bg = `bg-${type}`;
   return (
     <div

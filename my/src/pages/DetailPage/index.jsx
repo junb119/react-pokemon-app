@@ -9,6 +9,7 @@ import { Vector } from "../../assets/Vector";
 import { Balance } from "../../assets/Balance";
 import { Type } from "../../components/Type";
 import BaseStat from "../../components/BaseStat";
+import DamageRelations from "../../components/DamageRelations";
 
 const DetailPage = () => {
   const [pokemon, setPokemon] = useState();
@@ -30,9 +31,8 @@ const DetailPage = () => {
         // 만약 포켓몬 데이터를 가져왔다면
         const { name, id, types, weight, height, stats, abilities } =
           pokemonData; // 여러 데이터로 구조분해
-        console.log("pokemonData", pokemonData);
+
         const nextAndPreviousPokemon = await getNextAndPreviousPokemon(id); // 이전, 다음 포켓몬데이터 가져오기
-        console.log(nextAndPreviousPokemon);
 
         const DamageRelations = await Promise.all(
           // 데미지 관계데이터 가져오기
@@ -56,7 +56,6 @@ const DetailPage = () => {
           next: nextAndPreviousPokemon.next,
         };
 
-        console.log("formattedPokemonData", formattedPokemonData);
         setPokemon(formattedPokemonData);
         setIsLoading(false);
       }
@@ -65,6 +64,7 @@ const DetailPage = () => {
       setIsLoading(false);
     }
   }
+
   const formatPokemonAbilities = (Abilities) =>
     // Ability 데이터를 포멧하기
     Abilities.filter((_, index) => index <= 1).map(
@@ -97,8 +97,7 @@ const DetailPage = () => {
       pokemonData.next && (await axios.get(pokemonData?.next)); // 다음 포켓몬데이터가 있다면 다음 포켓몬 정보 가져오기
     const previousResponse =
       pokemonData.previous && (await axios.get(pokemonData?.previous)); // 이전 포켓몬데이터가 있다면 이전 포켓몬 정보 가져오기
-    console.log("nextResponse:", nextResponse);
-    console.log("previousResponse:", previousResponse);
+
     return {
       // 이전, 다음 포켓몬 정보가 있다면 그 포켓몬의 이름 반환
       next: nextResponse?.data?.results?.[0]?.name,
@@ -173,12 +172,9 @@ const DetailPage = () => {
         <section className="w-full min-h[65%] h-full bg-gray-800 z-10 pt-14 flex flex-col items-center gap-3 px-5 pb-4">
           <div className="flex items-center justify-center gap-4">
             {/* {포켓몬 타입} */}
-            {pokemon.types.map((type) => {
-              {
-                console.log("type", type);
-              }
-              return <Type key={type} type={type} />;
-            })}
+            {pokemon.types.map((type) => (
+              <Type key={type} type={type} />
+            ))}
           </div>
           <h2 className={`text-base font-semibold ${text}`}>정보</h2>
           <div className="flex w-full items-center justify-between max-w-[400px] text-center">
@@ -235,9 +231,8 @@ const DetailPage = () => {
               <h2
                 className={`capitalize font-semibold text-base ${text} text-center`}
               >
-                Type Effectiveness
+                <DamageRelations damages={pokemon.DamageRelations} />
               </h2>
-              {/* Damage */}
             </div>
           )}
         </section>
