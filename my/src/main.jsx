@@ -8,6 +8,6 @@ import NotUsePortal from "./practice/React_Portal/notUsePortal.jsx";
 import UsePortal from "./practice/React_Portal/UsePortal.jsx";
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
-  <UsePortal />
+  <App />
   // </StrictMode>,
 );

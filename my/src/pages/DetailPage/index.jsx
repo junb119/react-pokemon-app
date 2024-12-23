@@ -31,9 +31,8 @@ const DetailPage = () => {
 
       if (pokemonData) {
         // 만약 포켓몬 데이터를 가져왔다면
-        const { name, id, types, weight, height, stats, abilities } =
+        const { name, id, types, weight, height, stats, abilities, sprites } =
           pokemonData; // 여러 데이터로 구조분해
-
         const nextAndPreviousPokemon = await getNextAndPreviousPokemon(id); // 이전, 다음 포켓몬데이터 가져오기
 
         const DamageRelations = await Promise.all(
@@ -56,6 +55,7 @@ const DetailPage = () => {
           types: types.map((i) => i.type.name),
           previous: nextAndPreviousPokemon.previous,
           next: nextAndPreviousPokemon.next,
+          sprites: formatPokemonSprites(sprites),
         };
 
         setPokemon(formattedPokemonData);
@@ -90,7 +90,21 @@ const DetailPage = () => {
     { name: "Special Defense", baseStat: statSDEP.base_stat },
     { name: "Speed", baseStat: statSPD.base_stat },
   ];
+  const formatPokemonSprites = (Sprites) => {
+    // 원본 변경 방지
+    const newSprites = { ...Sprites };
 
+    // 객체의 프로퍼티의 값이 string이 아닌 것은 해당 프로퍼티 다 지우기
+    Object.keys(newSprites).forEach((key) => {
+      if (typeof newSprites[key] !== "string") {
+        delete newSprites[key];
+      }
+    });
+
+    // 배열로 바꿔서 내보내기
+    console.log(Object.values(newSprites));
+    return Object.values(newSprites);
+  };
   async function getNextAndPreviousPokemon(id) {
     // 이전, 다음 포켓몬데이터 가져오기
     const urlPokemon = `${baseURL}?limit=1&offset=${id - 1}`; // 기준이 되는 포켓몬 데이터 가져오기; 만약 offset=5(6-1)이면 5에서 limit=1을 가져옴 => 6번째 포켓몬
@@ -229,15 +243,11 @@ const DetailPage = () => {
               </tbody>
             </table>
           </div>
-          {/* {pokemon.DamageRelations && (
-            <div className="w-10/12">
-              <h2
-                className={`capitalize font-semibold text-base ${text} text-center`}
-              >
-                <DamageRelations damages={pokemon.DamageRelations} />
-              </h2>
-            </div>
-          )} */}
+          <div className="flex my-8 flex-wrap justify-center">
+            {pokemon.sprites.map((spriteUrl) => (
+              <img key={spriteUrl} src={spriteUrl} alt="sprite" />
+            ))}
+          </div>
         </section>
       </div>
       {isModalOpen ? (
