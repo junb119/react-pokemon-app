@@ -56,6 +56,7 @@ const DetailPage = () => {
           previous: nextAndPreviousPokemon.previous,
           next: nextAndPreviousPokemon.next,
           sprites: formatPokemonSprites(sprites),
+          description: await getPokemonDescription(id), // 요청이 완료될 때까지 기다린 다음 가공데이터 생성
         };
 
         setPokemon(formattedPokemonData);
@@ -120,6 +121,26 @@ const DetailPage = () => {
       previous: previousResponse?.data?.results?.[0]?.name,
     };
   }
+
+  const filterAndFormatDescriptions = (flavorText) => {
+    const koreanDescriptions = flavorText
+      ?.filter((i) => i.language.name === "ko")
+      .map((i) => i.flavor_text.replace(/\r|\n|\f/g, " ")); //
+    return koreanDescriptions;
+  };
+  const getPokemonDescription = async (id) => {
+    const url = `https://pokeapi.co/api/v2/pokemon-species/${id}/`;
+    // pokemon species의 데이터를 가져오기
+    const { data: pokemonSpecies } = await axios.get(url);
+
+    //  species 데이터 안에 들어있는 해당 포켓몬의 설명을 한국어로 배열 안에 다 넣어주기
+    const descriptions = filterAndFormatDescriptions(
+      pokemonSpecies.flavor_text_entries
+    );
+
+    // 배열 안에 있는 것 중 하나만 랜덤으로 뽑기
+    return descriptions[Math.floor(Math.random() * descriptions.length)];
+  };
 
   if (isLoading) {
     return (
@@ -243,6 +264,10 @@ const DetailPage = () => {
               </tbody>
             </table>
           </div>
+          <h2 className={`text-base font-semibold ${text}`}>설명</h2>
+          <p className="text-md leading-4 font-sans text-zinc-200 max-w-[30rem] text-center">
+            {pokemon.description}
+          </p>
           <div className="flex my-8 flex-wrap justify-center">
             {pokemon.sprites.map((spriteUrl) => (
               <img key={spriteUrl} src={spriteUrl} alt="sprite" />
