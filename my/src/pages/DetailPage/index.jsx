@@ -10,12 +10,14 @@ import { Balance } from "../../assets/Balance";
 import { Type } from "../../components/Type";
 import BaseStat from "../../components/BaseStat";
 import DamageRelations from "../../components/DamageRelations";
+import DamageModal from "../../components/DamageModal";
 
 const DetailPage = () => {
   const [pokemon, setPokemon] = useState();
   const [isLoading, setIsLoading] = useState(true); // 비동기작업 완료까지 표시할 로딩 state
   const params = useParams(); // path에 있는 포켓몬 id를 가져오기 위한 useParams
   const baseURL = `https://pokeapi.co/api/v2/pokemon/`;
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     setIsLoading(true);
     fetchPokemonData(params.id);
@@ -166,6 +168,7 @@ const DetailPage = () => {
               loading="lazy"
               alt={pokemon.name.replaceAll("-", " ")}
               className={`object-contain h-full`}
+              onClick={() => setIsModalOpen(true)}
             />
           </div>
         </section>
@@ -226,7 +229,7 @@ const DetailPage = () => {
               </tbody>
             </table>
           </div>
-          {pokemon.DamageRelations && (
+          {/* {pokemon.DamageRelations && (
             <div className="w-10/12">
               <h2
                 className={`capitalize font-semibold text-base ${text} text-center`}
@@ -234,9 +237,15 @@ const DetailPage = () => {
                 <DamageRelations damages={pokemon.DamageRelations} />
               </h2>
             </div>
-          )}
+          )} */}
         </section>
       </div>
+      {isModalOpen ? (
+        <DamageModal
+          damages={pokemon.DamageRelations}
+          setIsModalOpen={setIsModalOpen}
+        />
+      ) : null}
     </article>
   );
 };
