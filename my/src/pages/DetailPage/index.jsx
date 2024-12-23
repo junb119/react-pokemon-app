@@ -9,19 +9,19 @@ import { Vector } from "../../assets/Vector";
 import { Balance } from "../../assets/Balance";
 import { Type } from "../../components/Type";
 import BaseStat from "../../components/BaseStat";
-import DamageRelations from "../../components/DamageRelations";
 import DamageModal from "../../components/DamageModal";
 
 const DetailPage = () => {
   const [pokemon, setPokemon] = useState();
-  const [isLoading, setIsLoading] = useState(true); // 비동기작업 완료까지 표시할 로딩 state
+  const [isLoading, setIsLoading] = useState(false); // 비동기작업 완료까지 표시할 로딩 state
   const params = useParams(); // path에 있는 포켓몬 id를 가져오기 위한 useParams
+  const pokemonId = params.id;
   const baseURL = `https://pokeapi.co/api/v2/pokemon/`;
   const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     setIsLoading(true);
-    fetchPokemonData(params.id);
-  }, [params]);
+    fetchPokemonData(pokemonId);
+  }, [pokemonId]);
 
   async function fetchPokemonData(pokemonId) {
     // 포켓몬 데이터 가져오고 가공하기
