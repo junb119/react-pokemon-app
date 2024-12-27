@@ -18,7 +18,10 @@ const Navbar = () => {
   const [show, setShow] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({});
+  const initialUserData = localStorage.getItem("userData")
+    ? JSON.parse(localStorage.getItem("userData"))
+    : {};
+  const [userData, setUserData] = useState(initialUserData);
   useEffect(() => {
     // onAuthStateChanged : 유저의 상태가 변경되면 호출, 유저정보전달
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -39,6 +42,7 @@ const Navbar = () => {
       .then((result) => {
         console.log("result.user", result.user);
         setUserData(result.user);
+        localStorage.setItem("userData", JSON.stringify(result.user));
       })
       .catch((error) => {
         alert(error.message);
