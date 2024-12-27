@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 import app from "../firebase";
 
@@ -17,6 +18,7 @@ const Navbar = () => {
   const [show, setShow] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [userData, setUserData] = useState({});
   useEffect(() => {
     // onAuthStateChanged : 유저의 상태가 변경되면 호출, 유저정보전달
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -34,9 +36,12 @@ const Navbar = () => {
 
   const handleAuth = () => {
     signInWithPopup(auth, provider)
-      .then((result) => console.log(result))
+      .then((result) => {
+        console.log("result.user", result.user);
+        setUserData(result.user);
+      })
       .catch((error) => {
-        console.error(error);
+        alert(error.message);
       });
   };
   const listner = () => {
@@ -53,6 +58,15 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleLogOut = () => {
+    signOut(auth)
+      .then(() => {
+        setUserData({});
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
   return (
     <NavWrapper show={show}>
       <Logo>
@@ -62,12 +76,20 @@ const Navbar = () => {
           onClick={() => (window.location.href = "/")}
         />
       </Logo>
+      {/* 로그인페이지에서만 로그인 컴포넌트 보이기 */}
       {pathname === "/login" ? (
         <Login onClick={handleAuth}>로그인</Login>
       ) : (
-        <></>
+        <SignOut>
+          <UserImg src={userData.photoURL} alt={userData.displayName} />
+          <DropDown>
+            <span onClick={handleLogOut}>Sign out</span>
+          </DropDown>
+        </SignOut>
       )}
-      {/* 로그인페이지에서만 로그인 컴포넌트 보이기 */}
+      {/* {pathname !== "/" && ( */}
+
+      {/* )} */}
     </NavWrapper>
   );
 };
@@ -112,5 +134,41 @@ const Logo = styled.a`
 const Image = styled.img`
   cursor: pointer;
   width: 100%;
+`;
+
+const UserImg = styled.img`
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+`;
+const DropDown = styled.div`
+  position: absolute;
+  top: 48px;
+  right: 0px;
+  background: rgb(19, 19, 19);
+  borer: 1px solid rgba(151, 151, 151, 0.34);
+  border-radius: 4px;
+  box-shadow: rgb(0 0 0 /50%) 0 0 18px 0;
+  padding: 10px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  width: 100px;
+  opacity: 0;
+  color: white;
+`;
+const SignOut = styled.div`
+  position: relative;
+  height: 48px;
+  width: 48px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    ${DropDown} {
+      opacity: 1;
+      transition-duration: 1s;
+    }
+  }
 `;
 export default Navbar;
