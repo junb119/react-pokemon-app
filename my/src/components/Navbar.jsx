@@ -1,32 +1,24 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import styled from "styled-components";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import app from "../firebase";
 
-const NavWrapper = styled.nav`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 70px;
-  background-color: ${(props) => (props.show ? "#090b13" : "transparent")};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 36px;
-  letter-spacing: 16px;
-  z-index: 100;
-`;
-
-const Logo = styled.a`
-  padding: 0;
-  width: 50px;
-  magin-top: 4px;
-`;
-const Image = styled.img`
-  cursor: pointer;
-  width: 100%;
-`;
 const Navbar = () => {
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
   const [show, setShow] = useState(false);
+  const { pathname } = useLocation();
+
+  console.log(pathname);
+  const handleAuth = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => console.log(result))
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   const listner = () => {
     if ((window, scrollY > 50)) {
       setShow(true);
@@ -50,8 +42,55 @@ const Navbar = () => {
           onClick={() => (window.location.href = "/")}
         />
       </Logo>
+      {pathname === "/login" ? (
+        <Login onClick={handleAuth}>로그인</Login>
+      ) : (
+        <></>
+      )}
+      {/* 로그인페이지에서만 로그인 컴포넌트 보이기 */}
     </NavWrapper>
   );
 };
 
+const Login = styled.a` 
+background-color: rgba(0,0,0,0.6);
+padding: 8px 16px;
+text-transform: uppercase;
+letter-spacing:1.5px;
+border : 1px solid #f9f9f9;
+border-radius :4px;
+transition: all 0.2s ease 0s;
+color: white;
+  &hover {
+  background-color : #f9f9f9
+  color: #000;
+  border-color:transparent;
+  }`;
+
+const NavWrapper = styled.nav.attrs((props) => ({
+  show: undefined, // `show`를 DOM에 전달하지 않음
+}))`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: ${(props) => (props.show ? "#090b13" : "transparent")};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 36px;
+  letter-spacing: 16px;
+  z-index: 100;
+`;
+
+const Logo = styled.a`
+  padding: 0;
+  width: 50px;
+  magin-top: 4px;
+`;
+const Image = styled.img`
+  cursor: pointer;
+  width: 100%;
+`;
 export default Navbar;

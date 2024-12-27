@@ -10,10 +10,10 @@ const firebaseConfig = {
   projectId: "react-poke-app-b54fd",
   storageBucket: "react-poke-app-b54fd.firebasestorage.app",
   messagingSenderId: "414927302264",
-  appId: "1:414927302264:web:a6f36a451aa5f4d7a0878d"
+  appId: "1:414927302264:web:a6f36a451aa5f4d7a0878d",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-export default app
+export default app;
