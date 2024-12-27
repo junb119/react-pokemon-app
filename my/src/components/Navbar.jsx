@@ -1,17 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+} from "firebase/auth";
 import app from "../firebase";
 
 const Navbar = () => {
   const auth = getAuth(app);
+
   const provider = new GoogleAuthProvider();
 
   const [show, setShow] = useState(false);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    // onAuthStateChanged : 유저의 상태가 변경되면 호출, 유저정보전달
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log(user);
+      if (!user) {
+        navigate("/login");
+      } else if (user && pathname === "/login") {
+        navigate("/");
+      }
+    });
+    return () => {
+      unsubscribe(); // 로그인이 쓰이지 않는 경우 해제
+    };
+  }, [pathname]);
 
-  console.log(pathname);
   const handleAuth = () => {
     signInWithPopup(auth, provider)
       .then((result) => console.log(result))

@@ -13,7 +13,7 @@ const PokeCard = ({ url, name }) => {
     // 포켓몬 정보 가져오기
     try {
       const response = await axios.get(url);
-      console.log(response.data);
+      // console.log(response.data);
       const pokemonData = formatPokemonData(response.data);
       setPokemon(pokemonData); // 포멧팅한 데이터 state에 추가
     } catch (error) {
