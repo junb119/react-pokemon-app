@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { AutoComplete } from "../../components/AutoComplete";
 import PokeCard from "../../components/PokeCard";
+import { PokemonData, PokemonNameAndUrl } from "../../types/PokemonData";
 
 const MainPage = () => {
-  const [allPokemons, setAllPokemons] = useState([]); // 모든 포켓몬 데이터를 가지고 있는 State
-  const [displayedPokemons, setDisplayedPokemons] = useState([]); // 보여줄 포켓몬 데이터를 가지고 있는 state
-  const limitNum = 20; // 한번에 가져올 포켓몬 데이터 수
-  const url = `https://pokeapi.co/api/v2/pokemon/?limit=1008&offset=0`;
+  const [allPokemons, setAllPokemons] = useState<PokemonNameAndUrl[]>([]); // 모든 포켓몬 데이터를 가지고 있는 State
+  const [displayedPokemons, setDisplayedPokemons] = useState<
+    PokemonNameAndUrl[]
+  >([]); // 보여줄 포켓몬 데이터를 가지고 있는 state
+  const limitNum: number = 20; // 한번에 가져올 포켓몬 데이터 수
+  const url: string = `https://pokeapi.co/api/v2/pokemon/?limit=1008&offset=0`;
 
   const baseURL = "https://pokeapi.co/api/v2/pokemon";
 
@@ -15,7 +18,10 @@ const MainPage = () => {
     fetchPokeData();
   }, []);
 
-  function filterDisplayedPokemonData(allPokemonsData, displayedPokemons = []) {
+  function filterDisplayedPokemonData(
+    allPokemonsData: PokemonNameAndUrl[],
+    displayedPokemons: PokemonNameAndUrl[] = []
+  ) {
     //displayedPokemons = [] 기본값은 빈배열
     const limit = displayedPokemons.length + limitNum;
     //모든 포켓몬 데이터에서 limitNum 만큼 더 가져오기
@@ -26,7 +32,7 @@ const MainPage = () => {
 
   const fetchPokeData = async () => {
     try {
-      const response = await axios.get(url);
+      const response = await axios.get<PokemonData>(url);
       // 모든 포켓몬 데이터 기억하기
       setAllPokemons(response.data.results);
       // 실제로 화면에 보여줄 포켓몬 리스트 기억하는 state
@@ -47,7 +53,7 @@ const MainPage = () => {
       <section className="pt-6 flex flex-col justify-content items-center overflow-auto z-0">
         <div className="flex flex-row flex-wrap gap-[16px] items-center justify-center px-2 max-w-4xl">
           {displayedPokemons.length > 0 ? (
-            displayedPokemons.map(({ url, name }, index) => (
+            displayedPokemons.map(({ url, name }: PokemonNameAndUrl) => (
               <PokeCard key={url} url={url} name={name} />
             ))
           ) : (
