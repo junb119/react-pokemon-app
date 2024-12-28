@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // 코드가 변환될 JavaScript 버전을 설정. ESNext는 최신 ECMAScript 기능을 대상으로 함.
+    "useDefineForClassFields": true, // 클래스 필드를 JavaScript 표준 방식으로 정의하도록 설정.
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], // 사용할 라이브러리의 유형 정의 파일을 지정. DOM 관련 API와 최신 ECMAScript 기능 포함.
+    "allowJs": true, // JavaScript 파일의 컴파일을 허용 여부. 여기서는 허용하지 않음.
+    "skipLibCheck": true, // 라이브러리 파일의 타입 검사 건너뛰기. 빌드 속도 향상에 도움.
+    "esModuleInterop": false, // ES 모듈과 CommonJS 간의 호환성을 위한 설정. 여기선 비활성화.
+    "allowSyntheticDefaultImports": true, // default export가 없는 모듈에서 default import를 허용.
+    "strict": true, // 모든 엄격 모드 타입 검사를 활성화. 타입 안정성을 높임.
+    "forceConsistentCasingInFileNames": true, // 파일 이름 대소문자 일관성 강제. 대소문자 오류 방지.
+    "module": "ESNext", // 모듈 시스템 설정. ESNext는 최신 ECMAScript 모듈 시스템을 사용.
+    "moduleResolution": "Node", // Node.js 스타일로 모듈 경로를 해석.
+    "resolveJsonModule": true, // JSON 파일을 모듈로 가져오는 기능 활성화.
+    "isolatedModules": true, // 각 파일을 독립적으로 타입 검사하도록 설정. 단일 파일 변환 시 문제 예방.
+    "noEmit": true, // 컴파일 후 파일 생성 방지. 타입 검사만 수행.
+    "jsx": "react-jsx" // JSX 코드를 React 17+ 방식으로 변환. react-jsx는 더 간결한 React import를 지원.
+  },
+  "include": ["src"], // 포함할 파일 경로를 지정. 여기서는 src 디렉토리 아래의 파일만 포함.
+  "references": [{ "path": "./tsconfig.node.json" }] // 프로젝트 내 다른 tsconfig 파일 참조. 모노레포 구성 시 유용.
+}
