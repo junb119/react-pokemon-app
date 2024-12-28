@@ -28,7 +28,7 @@ export function AutoComplete({
     setSearchTerm(""); // 검색 후 입력창은 초기화
   }
 
-  function checkEqualName(input) {
+  function checkEqualName(input:string) {
     // 검색시 autocomplete
     const filterdArray = filterNames(input);
     return filterdArray[0]?.name === input ? [] : filterdArray; // 입력한 시점의 텍스트와 일치하는 포켓몬 이름이 있으면 빈배열, 아니면 필터링된 배열 반환
