@@ -1,13 +1,25 @@
 import { useState } from "react";
+import { PokemonNameAndUrl } from "../types/PokemonData";
 
-export function AutoComplete({ allPokemons, setDisplayedPokemons }) {
+interface AutoCompleteProps {
+  allPokemons: PokemonNameAndUrl[];
+  setDisplayedPokemons: React.Dispatch<
+    React.SetStateAction<PokemonNameAndUrl[]>
+  >;
+}
+export function AutoComplete({
+  allPokemons,
+  setDisplayedPokemons,
+}: AutoCompleteProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filterNames = (input) => {
+  const filterNames = (input: string) => {
     const value = input.toLowerCase();
     return value ? allPokemons.filter((e) => e?.name.includes(value)) : []; // 입력한 포켓몬 이름을 포함하는 포켓몬 데이터 배열 반환 없으면 빈 배열 반환
   };
-  function handleSubmit(e) {
+  function handleSubmit(
+    e: React.FormEvent<HTMLFormElement>
+  ) /* html의 폼 엘리멘트 타입 */ {
     // 검색 버튼 누를 때
     e.preventDefault();
 
