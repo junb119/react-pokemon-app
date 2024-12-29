@@ -10,12 +10,9 @@ import {
   signOut,
 } from "firebase/auth";
 import app from "../firebase";
+import storage from "../utils/storage";
 
-const userDataFromStorage = localStorage.getItem("userData");
-
-const initialUserData = userDataFromStorage
-  ? JSON.parse(userDataFromStorage)
-  : null;
+const initialUserData = storage.get<User>("userData");
 const Navbar = () => {
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
@@ -45,7 +42,8 @@ const Navbar = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         setUserData(result.user);
-        localStorage.setItem("userData", JSON.stringify(result.user));
+        storage.set("userData", result.user);
+        // localStorage.setItem("userData", JSON.stringify(result.user));
       })
       .catch((error) => {
         alert(error.message);
@@ -68,6 +66,8 @@ const Navbar = () => {
   const handleLogOut = () => {
     signOut(auth)
       .then(() => {
+        // localStorage.removeItem("userData");
+        storage.remove("userData");
         setUserData(null);
       })
       .catch((error) => {
