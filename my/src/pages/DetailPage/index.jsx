@@ -103,7 +103,6 @@ const DetailPage = () => {
     });
 
     // 배열로 바꿔서 내보내기
-    console.log(Object.values(newSprites));
     return Object.values(newSprites);
   };
   async function getNextAndPreviousPokemon(id) {
@@ -132,7 +131,6 @@ const DetailPage = () => {
     const url = `https://pokeapi.co/api/v2/pokemon-species/${id}/`;
     // pokemon species의 데이터를 가져오기
     const { data: pokemonSpecies } = await axios.get(url);
-
     //  species 데이터 안에 들어있는 해당 포켓몬의 설명을 한국어로 배열 안에 다 넣어주기
     const descriptions = filterAndFormatDescriptions(
       pokemonSpecies.flavor_text_entries

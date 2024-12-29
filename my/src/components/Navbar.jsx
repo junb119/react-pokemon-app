@@ -25,7 +25,7 @@ const Navbar = () => {
   useEffect(() => {
     // onAuthStateChanged : 유저의 상태가 변경되면 호출, 유저정보전달
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log(user);
+      // console.log(user);
       if (!user) {
         navigate("/login");
       } else if (user && pathname === "/login") {
